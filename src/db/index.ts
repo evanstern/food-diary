@@ -32,4 +32,4 @@ process.on('SIGINT', () => {
 });
 
 // register all models
-require('./models/item');
+require('./models/foodItem');
