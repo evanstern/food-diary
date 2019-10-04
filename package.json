@@ -7,6 +7,7 @@
     "tsc": "tsc",
     "start:dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "start:prod": "cd client && npm run build && cd .. && tsc && node ./build/index.js",
+    "lint": "eslint \"./src/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch"
   },

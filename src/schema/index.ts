@@ -4,12 +4,12 @@ import {
   GraphQLFieldConfigMap,
 } from 'graphql/type';
 
-import { addFoodItem, allFoodItems } from './foodItem';
+import { addFoodItem, allFoodItems, IAllFoodItemsArgs } from './foodItem';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   description: 'The main query',
-  fields: (): GraphQLFieldConfigMap<any, any> => ({
+  fields: (): GraphQLFieldConfigMap<any, any, IAllFoodItemsArgs> => ({
     allFoodItems: { ...allFoodItems },
   }),
 });
@@ -23,6 +23,6 @@ const MutationType = new GraphQLObjectType({
 });
 
 export const Schema = new GraphQLSchema({
-  query: QueryType,
+  query: QueryType as GraphQLObjectType,
   mutation: MutationType,
 });

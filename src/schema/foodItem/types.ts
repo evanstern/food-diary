@@ -7,6 +7,7 @@ import {
   GraphQLInt,
   GraphQLInputObjectType,
   GraphQLEnumType,
+  GraphQLList,
 } from 'graphql';
 import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 
@@ -41,6 +42,25 @@ export const FoodItemType = new GraphQLObjectType({
     updatedAt: {
       type: new GraphQLNonNull(GraphQLDateTime),
       description: 'Updated timestamp',
+    },
+  }),
+});
+
+export const AllFoodItemsType = new GraphQLObjectType({
+  name: 'AllFoodItems',
+  description: 'All food items',
+  fields: (): GraphQLFieldConfigMap<any, any> => ({
+    items: {
+      type: new GraphQLNonNull(new GraphQLList(FoodItemType)),
+      description: 'All the food items',
+    },
+    totalCalories: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'The total calories of the items returned',
+    },
+    totalQuantity: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'The total number of food items returned',
     },
   }),
 });
