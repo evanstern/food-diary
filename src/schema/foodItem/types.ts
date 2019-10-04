@@ -113,8 +113,8 @@ export const AllFoodItemFilterInputType = new GraphQLInputObjectType({
   },
 });
 
-export const AllFoodItemOrderEnum = new GraphQLEnumType({
-  name: 'foodItemOrderBy',
+const AllFoodItemOrderDirectionEnum = new GraphQLEnumType({
+  name: 'foodItemOrderByDirection',
   values: {
     ASC: { value: 'asc' },
     DESC: { value: 'desc' },
@@ -125,7 +125,7 @@ export const AllFoodItemOrderByInputType = new GraphQLInputObjectType({
   name: 'foodItemOrderBy',
   description: 'Order by field',
   fields: {
-    direction: { type: AllFoodItemOrderEnum },
-    fieldName: { type: GraphQLString },
+    direction: { type: AllFoodItemOrderDirectionEnum },
+    field: { type: GraphQLString },
   },
 });

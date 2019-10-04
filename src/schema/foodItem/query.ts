@@ -6,27 +6,40 @@ import {
 } from 'graphql';
 import mongoose from 'mongoose';
 
-import { FoodItemType, AllFoodItemFilterInputType } from './types';
+import {
+  FoodItemType,
+  AllFoodItemFilterInputType,
+  AllFoodItemOrderByInputType,
+} from './types';
 import { IFoodItem, IFoodItemModel } from '../../db/interfaces/foodItem';
 
 const FoodItem = mongoose.model<IFoodItemModel>('FoodItem');
 
+interface IFoodSearchOptions {
+  date?: any;
+  name?: string;
+}
+
+enum FoodItemDirection {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 interface IAllFoodItemsArgs {
   filter: {
-    date: {
+    date?: {
       eq?: Date;
       lt?: Date;
       gt?: Date;
     };
-    name: {
+    name?: {
       eq?: string;
     };
   };
-}
-
-interface IFoodSearchOptions {
-  date?: any;
-  name?: string;
+  orderBy: {
+    field?: string;
+    direction?: FoodItemDirection;
+  };
 }
 
 export const allFoodItems: GraphQLFieldConfig<any, any, IAllFoodItemsArgs> = {
@@ -34,10 +47,11 @@ export const allFoodItems: GraphQLFieldConfig<any, any, IAllFoodItemsArgs> = {
   description: 'List of all users',
   args: {
     filter: { type: AllFoodItemFilterInputType },
+    orderBy: { type: AllFoodItemOrderByInputType },
   },
   resolve: async (
     _source: Source,
-    { filter }: IAllFoodItemsArgs
+    { filter = {}, orderBy = {} }: IAllFoodItemsArgs
   ): Promise<IFoodItem[]> => {
     const options: IFoodSearchOptions = {};
 
@@ -59,7 +73,13 @@ export const allFoodItems: GraphQLFieldConfig<any, any, IAllFoodItemsArgs> = {
       options.name = name.eq;
     }
 
-    const results = await FoodItem.find(options);
+    const sortOptions: { [name: string]: number } = {};
+    if (orderBy.field) {
+      sortOptions[orderBy.field] =
+        orderBy.direction === FoodItemDirection.DESC ? -1 : 1;
+    }
+
+    const results = await FoodItem.find(options).sort(sortOptions);
     return results;
   },
 };
