@@ -6,6 +6,7 @@ import {
   GraphQLString,
   GraphQLInt,
   GraphQLInputObjectType,
+  GraphQLEnumType,
 } from 'graphql';
 import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 
@@ -64,5 +65,67 @@ export const FoodItemInputType = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLDate),
       description: 'The day this food item was consumed',
     },
+  },
+});
+
+const DateInputType = new GraphQLInputObjectType({
+  name: 'dateFilter',
+  description: 'Filter on a date',
+  fields: {
+    eq: {
+      type: GraphQLDate,
+      description: 'The date equals this date',
+    },
+    lt: {
+      type: GraphQLDate,
+      description: 'The date is less than this date',
+    },
+    gt: {
+      type: GraphQLDate,
+      description: 'The date is greater than this date',
+    },
+  },
+});
+
+const NameInputType = new GraphQLInputObjectType({
+  name: 'nameFilter',
+  description: 'Filter on a name',
+  fields: {
+    eq: {
+      type: GraphQLString,
+      description: 'The name matches this name',
+    },
+  },
+});
+
+export const AllFoodItemFilterInputType = new GraphQLInputObjectType({
+  name: 'foodItemFilter',
+  description: 'Filter for food items',
+  fields: {
+    date: {
+      type: DateInputType,
+      description: 'Filter on the date',
+    },
+    name: {
+      type: NameInputType,
+      description: 'Filter on the name',
+    },
+  },
+});
+
+export const AllFoodItemOrderEnum = new GraphQLEnumType({
+  name: 'foodItemOrderBy',
+  values: {
+    ASC: { value: 'asc' },
+    DESC: { value: 'desc' },
+  },
+});
+
+export const AllFoodItemOrderByInputType = new GraphQLInputObjectType({
+  name: 'foodItemOrderBy',
+  description: 'Order by field',
+  fields: {
+    direction: { type: AllFoodItemOrderEnum },
+    fieldName: { type: GraphQLString },
   },
 });

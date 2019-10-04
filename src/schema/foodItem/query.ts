@@ -6,33 +6,57 @@ import {
 } from 'graphql';
 import mongoose from 'mongoose';
 
-import { FoodItemType } from './types';
+import { FoodItemType, AllFoodItemFilterInputType } from './types';
 import { IFoodItem, IFoodItemModel } from '../../db/interfaces/foodItem';
-import { GraphQLDate } from 'graphql-iso-date';
 
 const FoodItem = mongoose.model<IFoodItemModel>('FoodItem');
 
 interface IAllFoodItemsArgs {
-  date?: Date;
+  filter: {
+    date: {
+      eq?: Date;
+      lt?: Date;
+      gt?: Date;
+    };
+    name: {
+      eq?: string;
+    };
+  };
 }
 
 interface IFoodSearchOptions {
-  date?: Date;
+  date?: any;
+  name?: string;
 }
 
-export const allFoodItems: GraphQLFieldConfig<any, any> = {
+export const allFoodItems: GraphQLFieldConfig<any, any, IAllFoodItemsArgs> = {
   type: new GraphQLNonNull(new GraphQLList(FoodItemType)),
   description: 'List of all users',
   args: {
-    date: { type: GraphQLDate },
+    filter: { type: AllFoodItemFilterInputType },
   },
   resolve: async (
     _source: Source,
-    { date }: IAllFoodItemsArgs
+    { filter }: IAllFoodItemsArgs
   ): Promise<IFoodItem[]> => {
     const options: IFoodSearchOptions = {};
-    if (date) {
-      options.date = date;
+
+    const { date, name } = filter;
+
+    if (date && date.eq) {
+      options.date = date.eq;
+    }
+
+    if (date && date.lt) {
+      options.date = { $lt: date.lt };
+    }
+
+    if (date && date.gt) {
+      options.date = { $gt: date.gt };
+    }
+
+    if (name && name.eq) {
+      options.name = name.eq;
     }
 
     const results = await FoodItem.find(options);
