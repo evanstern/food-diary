@@ -4,13 +4,19 @@ import {
   GraphQLFieldConfigMap,
 } from 'graphql/type';
 
-import { addFoodItem, allFoodItems, IAllFoodItemsArgs } from './foodItem';
+import {
+  addFoodItem,
+  allFoodItems,
+  deleteFoodItem,
+  foodItem,
+} from './foodItem';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   description: 'The main query',
-  fields: (): GraphQLFieldConfigMap<any, any, IAllFoodItemsArgs> => ({
+  fields: (): GraphQLFieldConfigMap<any, any, any> => ({
     allFoodItems: { ...allFoodItems },
+    foodItem: { ...foodItem },
   }),
 });
 
@@ -19,6 +25,7 @@ const MutationType = new GraphQLObjectType({
   description: 'The main mutation',
   fields: (): GraphQLFieldConfigMap<any, any> => ({
     addFoodItem: { ...addFoodItem },
+    deleteFoodItem: { ...deleteFoodItem },
   }),
 });
 

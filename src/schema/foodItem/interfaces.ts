@@ -33,3 +33,7 @@ export interface IAllFoodItems {
   totalCalories: number;
   totalQuantity: number;
 }
+
+export interface IFoodItemArgs {
+  id: string;
+}

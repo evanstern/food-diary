@@ -4,9 +4,11 @@ import { Card } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import { IFoodItem } from 'interfaces/foodItem';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 const StyledCard = styled(Card)`
   &&& {
+    cursor: pointer;
     width: 100%;
   }
 `;
@@ -22,13 +24,17 @@ const CardFooter = styled.div`
   }
 `;
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   item: IFoodItem;
 }
 
-export const Item: React.FC<IProps> = ({ item }) => {
+const ItemComponent: React.FC<IProps> = ({ history, item }) => {
+  const handleCardClick = () => {
+    history.push(`/item/${item._id}`);
+  };
+
   return (
-    <StyledCard key={item._id}>
+    <StyledCard key={item._id} onClick={handleCardClick}>
       <Card.Content header={item.name} />
       <Card.Content extra>
         <CardFooter>
@@ -43,3 +49,5 @@ export const Item: React.FC<IProps> = ({ item }) => {
     </StyledCard>
   );
 };
+
+export const Item = withRouter(ItemComponent);

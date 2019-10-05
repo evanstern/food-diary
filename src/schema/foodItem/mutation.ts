@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
-import { GraphQLFieldResolver, Source, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLFieldResolver,
+  Source,
+  GraphQLNonNull,
+  GraphQLID,
+} from 'graphql';
 
 import {
   IFoodItemModel,
@@ -30,4 +35,26 @@ export const addFoodItem = {
     foodItem: { type: FoodItemInputType },
   },
   resolve: doAddFoodItem,
+};
+
+const doDeleteFoodItem: GraphQLFieldResolver<Source, { id: string }> = async (
+  _,
+  { id }
+): Promise<IFoodItem> => {
+  const deletedFoodItem = await FoodItem.findByIdAndRemove(id);
+
+  if (!deletedFoodItem) {
+    throw new Error(`Could not find food item with id ${id}`);
+  }
+
+  return deletedFoodItem;
+};
+
+export const deleteFoodItem = {
+  type: new GraphQLNonNull(FoodItemType),
+  description: 'Delete a food item',
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve: doDeleteFoodItem,
 };
