@@ -9,6 +9,7 @@ interface IProps {
 const Content = styled.div`
   max-width: 960px;
   margin: 0 auto;
+  padding: 1.45rem 1.0875rem;
 `;
 
 export const Layout: React.FC<IProps> = ({ children }) => {
