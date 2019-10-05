@@ -75,8 +75,8 @@ export const AddItem: React.FC<IProps> = ({ history, match }) => {
       return;
     }
 
-    history.push('/food-diary');
-  }, [data, history]);
+    history.push(`/food-diary/${date}`);
+  }, [date, data, history]);
 
   return (
     <Layout>
@@ -121,7 +121,7 @@ export const AddItem: React.FC<IProps> = ({ history, match }) => {
           Done
         </Button>
         <br />
-        <Button as={Link} basic fluid size="big" to="/food-diary">
+        <Button as={Link} basic fluid size="big" to={`/food-diary/${date}`}>
           Cancel
         </Button>
       </Form>

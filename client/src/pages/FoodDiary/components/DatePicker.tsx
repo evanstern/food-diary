@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import DayPicker from 'react-day-picker';
 import { useTransition, animated, config } from 'react-spring';
 import { Header, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 const DateContainer = styled.div`
   display: block;
@@ -25,12 +26,15 @@ const DatePickerWrapper = styled.div`
   justify-content: center;
 `;
 
-interface IProps {
-  date: Moment;
-  onDayChange: (date: Moment) => void;
+interface IMatchProps {
+  date: string;
 }
 
-export const DatePicker: React.FC<IProps> = ({ date, onDayChange }) => {
+interface IProps extends RouteComponentProps<IMatchProps> {}
+
+const DatePickerComponent: React.FC<IProps> = ({ history, match }) => {
+  const date = moment(match.params.date);
+
   const [isDateVisible, setIsDateVisible] = useState<boolean>(true);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState<boolean>(
     false
@@ -49,11 +53,13 @@ export const DatePicker: React.FC<IProps> = ({ date, onDayChange }) => {
   });
 
   const handleDatePrev = () => {
-    onDayChange(moment(date.subtract(1, 'day')));
+    const dt = moment(date.subtract(1, 'day'));
+    history.push(`/food-diary/${dt.format('YYYY-MM-DD')}`);
   };
 
   const handleDateNext = () => {
-    onDayChange(moment(date.add(1, 'day')));
+    const dt = moment(date.add(1, 'day'));
+    history.push(`/food-diary/${dt.format('YYYY-MM-DD')}`);
   };
 
   const handleDateClick = () => {
@@ -62,7 +68,8 @@ export const DatePicker: React.FC<IProps> = ({ date, onDayChange }) => {
   };
 
   const handleSelectDate = (day: Date): void => {
-    onDayChange(moment(day));
+    history.push(`/food-diary/${moment(day).format('YYYY-MM-DD')}`);
+
     setIsDatePickerVisible(false);
   };
 
@@ -92,3 +99,5 @@ export const DatePicker: React.FC<IProps> = ({ date, onDayChange }) => {
     </>
   );
 };
+
+export const DatePicker = withRouter(DatePickerComponent);

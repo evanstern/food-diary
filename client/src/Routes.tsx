@@ -1,5 +1,6 @@
 import React from 'react';
 
+import moment from 'moment';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
 import { Home } from 'pages/Home';
@@ -18,11 +19,13 @@ export const Routes: React.FC = () => {
     return <Home />;
   }
 
+  const today = moment().format('YYYY-MM-DD');
+
   return (
     <Switch>
       <Route path="/food-diary/add/:date" component={AddItem} />
-      <Route path="/food-diary" component={FoodDiary} />
-      <Redirect from="/" to="/food-diary" />
+      <Route path="/food-diary/:date" component={FoodDiary} />
+      <Redirect from="/" to={`/food-diary/${today}`} />
     </Switch>
   );
 };

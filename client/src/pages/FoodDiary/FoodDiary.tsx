@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { gql } from 'apollo-boost';
 import { useLazyQuery } from '@apollo/react-hooks';
-import moment, { Moment } from 'moment';
-import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { animated, useSprings } from 'react-spring';
 import { Segment, Header, Divider, Button } from 'semantic-ui-react';
 import 'react-day-picker/lib/style.css';
@@ -40,8 +40,14 @@ interface IFoodItemsData {
   };
 }
 
-export const FoodDiary: React.FC = () => {
-  const [date, setDate] = useState<Moment>(moment());
+interface IMatchProps {
+  date: string;
+}
+
+interface IProps extends RouteComponentProps<IMatchProps> {}
+
+export const FoodDiary: React.FC<IProps> = ({ match }) => {
+  const { date } = match.params;
 
   const [fetchAllFoodItems, { data }] = useLazyQuery<IFoodItemsData>(
     fetchFoodItemsQuery,
@@ -51,8 +57,9 @@ export const FoodDiary: React.FC = () => {
   );
 
   useEffect(() => {
+    const dt = moment(date);
     fetchAllFoodItems({
-      variables: { date: date.startOf('day').format('YYYY-MM-DD') },
+      variables: { date: dt.startOf('day').format('YYYY-MM-DD') },
     });
   }, [date, fetchAllFoodItems]);
 
@@ -71,13 +78,9 @@ export const FoodDiary: React.FC = () => {
       : []
   );
 
-  const handleDayChange = (date: Moment): void => {
-    setDate(date);
-  };
-
   return (
     <Layout>
-      <DatePicker date={date} onDayChange={handleDayChange} />
+      <DatePicker />
       <Divider horizontal>Food you ate today</Divider>
       {data &&
         itemsSprings.map((props, i) => {
@@ -91,13 +94,7 @@ export const FoodDiary: React.FC = () => {
             </animated.div>
           );
         })}
-      <Button
-        as={Link}
-        primary
-        fluid
-        size="big"
-        to={`/food-diary/add/${date.format('YYYY-MM-DD')}`}
-      >
+      <Button as={Link} primary fluid size="big" to={`/food-diary/add/${date}`}>
         Add Food
       </Button>
       {data && (
