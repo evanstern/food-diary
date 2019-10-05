@@ -4,6 +4,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 
 import { Home } from 'pages/Home';
 import { FoodDiary } from 'pages/FoodDiary';
+import { AddItem } from 'pages/AddItem';
 import { useAuth0 } from 'utils/auth0';
 
 export const Routes: React.FC = () => {
@@ -19,8 +20,9 @@ export const Routes: React.FC = () => {
 
   return (
     <Switch>
-      <Route to="/food-diary" component={FoodDiary} />
-      <Redirect to="/food-diary" />
+      <Route path="/food-diary/add/:date" component={AddItem} />
+      <Route path="/food-diary" component={FoodDiary} />
+      <Redirect from="/" to="/food-diary" />
     </Switch>
   );
 };
