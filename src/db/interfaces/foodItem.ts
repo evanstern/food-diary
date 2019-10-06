@@ -5,6 +5,7 @@ export interface IFoodItemInput {
   quantity: number;
   calories: number;
   date: Date;
+  createdBy: string;
 }
 
 export interface IFoodItem {
@@ -13,6 +14,7 @@ export interface IFoodItem {
   calories: number;
   quantity: number;
   date: Date;
+  createdBy: string;
   createdAt: Date;
   updatedAt: Date;
 }

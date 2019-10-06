@@ -3,6 +3,7 @@ import { IFoodItem } from '../../db/interfaces/foodItem';
 export interface IFoodSearchOptions {
   date?: any;
   name?: string;
+  createdBy: string;
 }
 
 export enum FoodItemDirection {
