@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { Button, Header as SemanticHeader, Menu } from 'semantic-ui-react';
+import { Header as SemanticHeader, Menu, Button } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { useAuth0 } from 'utils/auth0';
+
+import auth from 'utils/auth0';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -18,8 +20,13 @@ const Content = styled(Menu)`
   margin: 0 auto !important;
 `;
 
-export const Header: React.FC = () => {
-  const { loading, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+interface IProps extends RouteComponentProps {}
+
+export const HeaderComponent: React.FC<IProps> = ({ history }) => {
+  const handleLogOut = () => {
+    auth.logout();
+    history.replace('/');
+  };
 
   return (
     <StyledHeader>
@@ -28,17 +35,16 @@ export const Header: React.FC = () => {
           <SemanticHeader as="h1">Food Diary</SemanticHeader>
         </Menu.Item>
         <Menu.Menu position="right">
-          {!loading && !isAuthenticated && (
+          {auth.isAuthenticated() ? (
             <Menu.Item>
-              <Button primary basic onClick={() => loginWithRedirect({})}>
-                login
+              <Button basic primary onClick={handleLogOut}>
+                Log out
               </Button>
             </Menu.Item>
-          )}
-          {!loading && isAuthenticated && (
+          ) : (
             <Menu.Item>
-              <Button primary basic onClick={() => logout()}>
-                logout
+              <Button basic primary onClick={() => auth.login()}>
+                Log in
               </Button>
             </Menu.Item>
           )}
@@ -47,3 +53,5 @@ export const Header: React.FC = () => {
     </StyledHeader>
   );
 };
+
+export const Header = withRouter(HeaderComponent);
