@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { animated, useSprings } from 'react-spring';
 import { Segment, Header, Divider, Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 import 'react-day-picker/lib/style.css';
 
 import { Layout } from 'components/Layout';
@@ -14,6 +15,10 @@ import { IFoodItem } from 'interfaces/foodItem';
 
 import { DatePicker } from './components/DatePicker';
 import { Item } from './components/Item';
+
+const NotFound = styled.div`
+  margin: 2rem 0;
+`;
 
 const fetchFoodItemsQuery = gql`
   query FoodItemsQuery($date: Date!) {
@@ -85,6 +90,16 @@ export const FoodDiary: React.FC<IProps> = ({ match }) => {
       {!loading ? (
         <>
           <Divider horizontal>Food you ate today</Divider>
+          {(!data || data.allFoodItems.items.length === 0) && (
+            <NotFound>
+              <Header as="h3" textAlign="center">
+                Nothing eaten on this day.
+              </Header>
+              <Header as="h3" textAlign="center">
+                Add some food!
+              </Header>
+            </NotFound>
+          )}
           {data &&
             itemsSprings.map((props, i) => {
               const item = data.allFoodItems.items[i];
