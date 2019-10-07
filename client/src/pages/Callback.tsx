@@ -4,6 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import { Layout } from 'components/Layout';
 import auth from '../utils/auth0';
+import { Loader } from 'components/Loader';
 
 interface IProps extends RouteComponentProps {}
 
@@ -16,7 +17,11 @@ const CallbackComponent: React.FC<IProps> = ({ history }) => {
     doAuth();
   }, [history]);
 
-  return <Layout>Loading ...</Layout>;
+  return (
+    <Layout>
+      <Loader />
+    </Layout>
+  );
 };
 
 export const Callback = withRouter(CallbackComponent);

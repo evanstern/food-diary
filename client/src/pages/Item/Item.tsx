@@ -8,6 +8,7 @@ import { Card, Image, Button, Form, Modal, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import { Layout } from 'components/Layout';
+import { Loader } from 'components/Loader';
 import { IFoodItem } from 'interfaces/foodItem';
 
 import foodIcon from './food.jpg';
@@ -65,9 +66,10 @@ const ItemComponent: React.FC<IProps> = ({ history, match }) => {
   const { loading, data } = useQuery<IResults>(getFoodItemQuery, {
     variables: { id },
   });
-  const [deleteFoodItem, { data: deletedFoodItem }] = useMutation<
-    IDeleteResults
-  >(deleteFoodItemMutation);
+  const [
+    deleteFoodItem,
+    { loading: deletedLoding, data: deletedFoodItem },
+  ] = useMutation<IDeleteResults>(deleteFoodItemMutation);
 
   useEffect(() => {
     if (!deletedFoodItem) {
@@ -76,10 +78,6 @@ const ItemComponent: React.FC<IProps> = ({ history, match }) => {
     const { date } = deletedFoodItem.deleteFoodItem;
     history.push(`/food-diary/${moment(date).format('YYYY-MM-DD')}`);
   }, [history, deletedFoodItem]);
-
-  if (!data || loading) {
-    return <Layout>Loading...</Layout>;
-  }
 
   const handleDeleteClick = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -108,16 +106,17 @@ const ItemComponent: React.FC<IProps> = ({ history, match }) => {
   };
 
   const {
-    name,
-    quantity,
-    calories,
-    date,
-    createdAt,
-    updatedAt,
-  } = data.foodItem;
+    name = '',
+    quantity = '',
+    calories = '',
+    date = null,
+    createdAt = null,
+    updatedAt = null,
+  } = data ? data.foodItem : {};
 
   return (
     <>
+      {(loading || deletedLoding) && <Loader />}
       <Modal basic open={isDeleting} onClose={handleCloseModal} size="small">
         <Header icon="trash" content={`Delete "${name}"?`} />
         <Modal.Content>Deleting can't be undone.</Modal.Content>
@@ -135,7 +134,7 @@ const ItemComponent: React.FC<IProps> = ({ history, match }) => {
           <Card.Content>
             <Image floated="right" size="mini" src={foodIcon} />
             <Card.Header>{name}</Card.Header>
-            <Card.Meta>{moment(date).format('ll')}</Card.Meta>
+            <Card.Meta>{date ? moment(date).format('ll') : ''}</Card.Meta>
             <Card.Description>
               <Form>
                 <Form.Field
@@ -163,14 +162,14 @@ const ItemComponent: React.FC<IProps> = ({ history, match }) => {
                   label="Created At"
                   type="text"
                   control="input"
-                  value={moment(createdAt).format('lll')}
+                  value={createdAt ? moment(createdAt).format('lll') : ''}
                   disabled
                 />
                 <Form.Field
                   label="Updated At"
                   type="text"
                   control="input"
-                  value={moment(updatedAt).format('lll')}
+                  value={updatedAt ? moment(updatedAt).format('lll') : ''}
                   disabled
                 />
               </Form>

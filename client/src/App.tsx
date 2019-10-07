@@ -14,6 +14,7 @@ import { apolloClient } from './utils/apolloClient';
 
 import background from './background.jpg';
 import auth from 'utils/auth0';
+import { Loader } from 'components/Loader';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -56,7 +57,7 @@ const AuthWrapperComponent: React.FC<RouteComponentProps> = ({
   }, [location, forceUpdate]);
 
   if (isWaiting) {
-    return <div>Loading</div>;
+    return <Loader />;
   }
 
   return <>{children}</>;

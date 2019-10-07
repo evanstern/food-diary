@@ -9,6 +9,7 @@ import { Segment, Header, Divider, Button } from 'semantic-ui-react';
 import 'react-day-picker/lib/style.css';
 
 import { Layout } from 'components/Layout';
+import { Loader } from 'components/Loader';
 import { IFoodItem } from 'interfaces/foodItem';
 
 import { DatePicker } from './components/DatePicker';
@@ -49,7 +50,7 @@ interface IProps extends RouteComponentProps<IMatchProps> {}
 export const FoodDiary: React.FC<IProps> = ({ match }) => {
   const { date } = match.params;
 
-  const [fetchAllFoodItems, { data }] = useLazyQuery<IFoodItemsData>(
+  const [fetchAllFoodItems, { loading, data }] = useLazyQuery<IFoodItemsData>(
     fetchFoodItemsQuery,
     {
       fetchPolicy: 'network-only',
@@ -81,34 +82,46 @@ export const FoodDiary: React.FC<IProps> = ({ match }) => {
   return (
     <Layout>
       <DatePicker />
-      <Divider horizontal>Food you ate today</Divider>
-      {data &&
-        itemsSprings.map((props, i) => {
-          const item = data.allFoodItems.items[i];
-          return (
-            <animated.div
-              key={item._id}
-              style={{ ...props, marginBottom: '1.45rem' }}
-            >
-              <Item item={item} />
-            </animated.div>
-          );
-        })}
-      <Button as={Link} primary fluid size="big" to={`/food-diary/add/${date}`}>
-        Add Food
-      </Button>
-      {data && (
+      {!loading ? (
         <>
-          <Divider horizontal>Summary</Divider>
-          <Segment>
-            <Header as="h4">
-              Items Eaten: {data.allFoodItems.totalQuantity}
-            </Header>
-            <Header as="h4">
-              Total Calories: {data.allFoodItems.totalCalories}
-            </Header>
-          </Segment>
+          <Divider horizontal>Food you ate today</Divider>
+          {data &&
+            itemsSprings.map((props, i) => {
+              const item = data.allFoodItems.items[i];
+              return (
+                <animated.div
+                  key={item._id}
+                  style={{ ...props, marginBottom: '1.45rem' }}
+                >
+                  <Item item={item} />
+                </animated.div>
+              );
+            })}
+          <Button
+            as={Link}
+            primary
+            fluid
+            size="big"
+            to={`/food-diary/add/${date}`}
+          >
+            Add Food
+          </Button>
+          {data && (
+            <>
+              <Divider horizontal>Summary</Divider>
+              <Segment>
+                <Header as="h4">
+                  Items Eaten: {data.allFoodItems.totalQuantity}
+                </Header>
+                <Header as="h4">
+                  Total Calories: {data.allFoodItems.totalCalories}
+                </Header>
+              </Segment>
+            </>
+          )}
         </>
+      ) : (
+        <Loader />
       )}
     </Layout>
   );

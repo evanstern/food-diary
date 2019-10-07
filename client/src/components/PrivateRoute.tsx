@@ -3,6 +3,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import auth from 'utils/auth0';
+import { Loader } from 'components/Loader';
 
 interface IProps {
   component: any;
@@ -21,7 +22,7 @@ export const PrivateRoute: React.FC<IProps> = ({
       render={renderProps => {
         if (!auth.isAuthenticated()) {
           auth.login();
-          return <div>Loading ...</div>;
+          return <Loader />;
         }
         return <Component {...renderProps} />;
       }}
