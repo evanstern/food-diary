@@ -7,11 +7,7 @@ import {
   GraphQLID,
 } from 'graphql';
 
-import {
-  IFoodItemModel,
-  IFoodItemInput,
-  IFoodItem,
-} from '../../db/interfaces/foodItem';
+import { IFoodItemModel, IFoodItem } from '../../db/interfaces/foodItem';
 import { IUser } from '../../db/interfaces/user';
 import { FoodItemType, FoodItemInputType } from './types';
 
