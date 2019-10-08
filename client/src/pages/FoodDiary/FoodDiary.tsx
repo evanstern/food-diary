@@ -117,7 +117,7 @@ export const FoodDiary: React.FC<IProps> = ({ match }) => {
             primary
             fluid
             size="big"
-            to={`/food-diary/add/${date}`}
+            to={`/food-diary/add/${moment(date).format('YYYY-MM-DD')}`}
           >
             Add Food
           </Button>
