@@ -50,8 +50,9 @@ const apolloServer = new ApolloServer({
 
 apolloServer.applyMiddleware({ app });
 
+app.use(express.static(__dirname + '/../client/build/'));
 app.get('*', (_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 
 export default app;
