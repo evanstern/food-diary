@@ -22,6 +22,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
 
     background-image: url(${background});
+    background-position: bottom;
     background-size: cover;
   }
 `;

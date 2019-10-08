@@ -37,13 +37,13 @@ export const HeaderComponent: React.FC<IProps> = ({ history }) => {
         <Menu.Menu position="right">
           {auth.isAuthenticated() ? (
             <Menu.Item>
-              <Button basic primary onClick={handleLogOut}>
+              <Button primary onClick={handleLogOut}>
                 Log out
               </Button>
             </Menu.Item>
           ) : (
             <Menu.Item>
-              <Button basic primary onClick={() => auth.login()}>
+              <Button primary onClick={() => auth.login()}>
                 Log in
               </Button>
             </Menu.Item>
