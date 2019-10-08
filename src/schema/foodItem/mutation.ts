@@ -19,8 +19,7 @@ const FoodItem = mongoose.model<IFoodItemModel>('FoodItem');
 
 const doAddFoodItem: GraphQLFieldResolver<
   Source,
-  { user: Promise<IUser> },
-  { foodItem: IFoodItemInput }
+  { user: Promise<IUser> }
 > = async (
   _,
   { foodItem },
@@ -48,8 +47,7 @@ export const addFoodItem = {
 
 const doDeleteFoodItem: GraphQLFieldResolver<
   Source,
-  { user: Promise<IUser> },
-  { id: string }
+  { user: Promise<IUser> }
 > = async (_, { id }, { user }): Promise<IFoodItem> => {
   const u = await user;
 
