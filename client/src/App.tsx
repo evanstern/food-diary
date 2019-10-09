@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { ApolloProvider } from '@apollo/react-hooks';
+import { Helmet } from 'react-helmet';
 import {
   BrowserRouter,
   withRouter,
@@ -65,9 +66,39 @@ const AuthWrapperComponent: React.FC<RouteComponentProps> = ({
 };
 const AuthWrapper = withRouter(AuthWrapperComponent);
 
+const SEO: React.FC = () => {
+  return (
+    <Helmet
+      htmlAttributes={{
+        lang: 'en',
+      }}
+      title="Food Diary"
+      meta={[
+        {
+          name: 'description',
+          content: 'Track your food.',
+        },
+        {
+          name: 'twitter:card',
+          content: 'Track your food.',
+        },
+        {
+          name: 'twitter:title',
+          content: 'Food Diary',
+        },
+        {
+          name: 'twitter:description',
+          content: 'Track your food.',
+        },
+      ]}
+    />
+  );
+};
+
 const App: React.FC = () => {
   return (
     <ApolloProvider client={apolloClient}>
+      <SEO />
       <GlobalStyle />{' '}
       <BrowserRouter>
         {' '}
